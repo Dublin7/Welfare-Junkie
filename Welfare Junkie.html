@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Welfare Junkie Market Desk</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #050817;
+      --bg-card: #0d1024;
+      --bg-soft: #12162b;
+      --accent-1: #00f5ff;
+      --accent-2: #ff007a;
+      --accent-3: #ffbe0b;
+      --text-main: #f4f5ff;
+      --text-dim: #8b8fa8;
+      --danger: #ff3366;
+      --success: #00ffa8;
+      --warning: #ffd34d;
+      --border: rgba(255,255,255,0.06);
+      --shadow: 0 18px 45px rgba(0,0,0,0.65);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Syne', sans-serif;
+      background: radial-gradient(circle at top, #191d3b 0, #050817 55%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 1.5rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .wrapper {
+      max-width: 1100px;
+      width: 100%;
+      background: linear-gradient(135deg, rgba(0,245,255,0.12), rgba(255,0,122,0.08));
+      border-radius: 24px;
+      padding: 2px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wrapper::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(0,245,255,0.12) 0, transparent 50%),
+        radial-gradient(circle at 90% 100%, rgba(255,0,122,0.14) 0, transparent 50%);
+      opacity: 0.7;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .inner {
+      position: relative;
+      z-index: 1;
+      border-radius: 22px;
+      background: radial-gradient(circle at top left, #191c3a 0, #050817 60%);
+      padding: 2rem 1.5rem 2.5rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+
+    h1 {
+      font-size: clamp(2.1rem, 4vw, 3rem);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+      background: linear-gradient(120deg, var(--accent-1), var(--accent-3), var(--accent-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.06);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      margin-top: 0.4rem;
+    }
+
+    .pill span.icon {
+      font-size: 0.9rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .tab-btn {
+      position: relative;
+      border: none;
+      outline: none;
+      background: rgba(6, 10, 40, 0.95);
+      color: var(--text-dim);
+      padding: 0.5rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: all 0.18s ease-out;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .tab-btn span.dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--text-dim);
+    }
+
+    .tab-btn.active {
+      color: var(--text-main);
+      border-color: rgba(0,245,255,0.7);
+      box-shadow: 0 0 16px rgba(0,245,255,0.4);
+      background: radial-gradient(circle at top, #182241, #070b1a 55%);
+      transform: translateY(-1px);
+    }
+
+    .tab-btn.active span.dot {
+      background: var(--accent-1);
+    }
+
+    .tab-panel {
+      display: none;
+      background: radial-gradient(circle at top left, #161a33, #070918 70%);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.4rem 1.6rem;
+      box-shadow: 0 16px 32px rgba(0,0,0,0.6);
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    h2.section-title {
+      font-size: 1.2rem;
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .section-tagline {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      margin-bottom: 0.9rem;
+    }
+
+    /* Panel 1 – Meme Poster */
+    .poster {
+      border-radius: 16px;
+      padding: 1.4rem;
+      background: radial-gradient(circle at top, #2a1634, #060712 70%);
+      border: 1px solid rgba(255,255,255,0.12);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .poster::before {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background:
+        repeating-linear-gradient(
+          135deg,
+          rgba(255,255,255,0.05) 0,
+          rgba(255,255,255,0.05) 1px,
+          transparent 1px,
+          transparent 4px
+        );
+      opacity: 0.7;
+      mix-blend-mode: soft-light;
+      pointer-events: none;
+    }
+
+    .poster-top {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--warning);
+      margin-bottom: 1.2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .poster-main {
+      font-size: 1.6rem;
+      line-height: 1.3;
+      font-weight: 700;
+      margin: 0 0 1rem;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+
+    .poster-main span.highlight {
+      color: var(--accent-3);
+    }
+
+    .poster-sub {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .poster-bottom {
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent-1);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Panel 2 – Rap Roast */
+    .lyrics-block {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      background: rgba(4, 7, 25, 0.9);
+      padding: 1rem 1.1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .lyrics-block .label {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.7rem;
+      color: var(--accent-1);
+      margin-bottom: 0.3rem;
+    }
+
+    .lyrics-block + .lyrics-block {
+      margin-top: 0.8rem;
+    }
+
+    /* Panel 3 – Fake Report */
+    .grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-bottom: 1.2rem;
+    }
+
+    .metric {
+      background: rgba(5, 9, 26, 0.9);
+      border-radius: 14px;
+      padding: 0.9rem 1rem;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .metric-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-bottom: 0.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .metric-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      display: flex;
+      align-items: baseline;
+      gap: 0.25rem;
+    }
+
+    .metric-value span.unit {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    .metric-pill {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      margin-top: 0.3rem;
+      padding: 0.18rem 0.6rem;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .metric-pill.danger {
+      background: rgba(255,51,102,0.15);
+      color: var(--danger);
+    }
+    .metric-pill.warning {
+      background: rgba(255,211,77,0.16);
+      color: var(--warning);
+    }
+    .metric-pill.success {
+      background: rgba(0,255,168,0.14);
+      color: var(--success);
+    }
+
+    .report-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+
+    .report-text strong {
+      color: var(--accent-3);
+    }
+
+    /* Panel 4 – Forecast Monologue */
+    .quote {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.86rem;
+      line-height: 1.7;
+      background: rgba(5, 10, 28, 0.95);
+      padding: 1rem 1.1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quote::before {
+      content: "“";
+      position: absolute;
+      font-size: 4rem;
+      color: rgba(255,255,255,0.04);
+      top: -10px;
+      left: 10px;
+    }
+
+    .quote-speaker {
+      margin-top: 0.75rem;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: var(--accent-1);
+    }
+
+    /* Scrollbar */
+    .tab-panel::-webkit-scrollbar {
+      width: 6px;
+    }
+    .tab-panel::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.15);
+      border-radius: 999px;
+    }
+    .tab-panel::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 1rem;
+      }
+      .inner {
+        padding: 1.4rem 1.1rem 1.8rem;
+      }
+      .poster-main {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="inner">
+      <header>
+        <h1>Welfare Junkie Market Desk</h1>
+        <p class="subtitle">Glitch poetry, fake finance & cosmic roast of late-stage capitalism.</p>
+        <div class="pill">
+          <span class="icon">⚡</span>
+          <span>More stable than half your portfolio</span>
+        </div>
+      </header>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="poster">
+          <span class="dot"></span> Meme Poster
+        </button>
+        <button class="tab-btn" data-tab="rap">
+          <span class="dot"></span> Rap Roast
+        </button>
+        <button class="tab-btn" data-tab="report">
+          <span class="dot"></span> Stability Report
+        </button>
+        <button class="tab-btn" data-tab="forecast">
+          <span class="dot"></span> Welfare Forecast
+        </button>
+      </div>
+
+      <!-- Panel 1: Meme Poster -->
+      <section class="tab-panel active" id="panel-poster">
+        <h2 class="section-title">STOCK MARKET vs. GLITCH REALITY</h2>
+        <p class="section-tagline">Template for memes / posters / cursed Instagram stories.</p>
+
+        <div class="poster">
+          <div class="poster-top">
+            📉 Stock Market Trying To Be Stable
+          </div>
+          <div class="poster-main">
+            GLITCH SUBTITLES<br>
+            &amp; WELFARE RHYMES<br>
+            <span class="highlight">STILL MAKE MORE SENSE</span><br>
+            THAN YOUR PORTFOLIO.
+          </div>
+          <div class="poster-sub">
+            “Turning confetti into code while NASDAQ does emotional aerobics.”
+          </div>
+          <div class="poster-bottom">
+            CONFETTI &gt; CANDLES • VIBES &gt; VOLATILITY
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 2: Rap Roast -->
+      <section class="tab-panel" id="panel-rap">
+        <h2 class="section-title">RAP ROAST – MARKETS vs. WELFARE JUNKIE</h2>
+        <p class="section-tagline">Drop this over a glitch trap beat & call it financial therapy.</p>
+
+        <div class="lyrics-block">
+<span class="label">VERSE 1 – “WALL STREET WOBBLE”</span>
+Stocks swingin’ like a drunk giraffe,
+NASDAQ wobblin’, havin’ a laugh.
+Crypto droppin’ like it slipped on soap,
+analysts mumblin’, “yeah bro, we got hope.”  (nope)
+
+Charts go red, then green, then red,
+newsfeed screaming inside your head.
+You refreshing every five,
+market says: “bro, touch some grass, go live.”
+        </div>
+
+        <div class="lyrics-block">
+<span class="label">HOOK – “GLITCH IS STABLE”</span>
+Your glitch subtitles?  tighter than the Dow.
+Welfare Junkie bars?  more coherent than it now.
+You watchin’ art while the markets go to war—
+confetti in the sky, S&amp;P on the floor.
+
+Glitch on the screen, but the rhythm still pure.
+Wall Street graphs look like they got laced for sure.
+One of these things is honest and raw,
+the other charges fees just to break the law.
+        </div>
+
+        <div class="lyrics-block">
+<span class="label">VERSE 2 – “CONFETTI &amp; CODE”</span>
+“Welfare Junkie” vibin’, heart made of dust,
+turns confetti into code, in welfare we trust.
+Spending that crypto like you got a plan,
+on-chain wizard, off-grid man.
+
+No 9 to 5, just vibes and schemes,
+NFT nights and daylight dreams.
+State paid the rent, I paid my dues,
+chillin’ in the system with custom shoes.
+
+They call it theft, I call it upgrade,
+hackin’ every rule that the boomers made.
+Market meltdown, but I don’t flinch:
+volatility’s just swing for the glitch.
+        </div>
+      </section>
+
+      <!-- Panel 3: Fake Stability Report -->
+      <section class="tab-panel" id="panel-report">
+        <h2 class="section-title">GLOBAL STABILITY INDEX – WEEKLY REPORT</h2>
+        <p class="section-tagline">Compiled by the Department of Absolutely No Control.</p>
+
+        <div class="grid">
+          <div class="metric">
+            <div class="metric-label">NASDAQ STABILITY SCORE</div>
+            <div class="metric-value">12<span class="unit">/ 100</span></div>
+            <div class="metric-pill danger">📉 emotional damage detected</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">CRYPTO VOLATILITY LEVEL</div>
+            <div class="metric-value">7<span class="unit">/ 100</span></div>
+            <div class="metric-pill danger">🧨 “it’s a long-term hold” (copium)</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">TESLA CHAOS FACTOR</div>
+            <div class="metric-value">???</div>
+            <div class="metric-pill warning">🚗 removed to preserve mental health</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">GLITCH RAP COHERENCE</div>
+            <div class="metric-value">89<span class="unit">/ 100</span></div>
+            <div class="metric-pill success">⚡ “shockingly makes sense”</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">WELFARE JUNKIE CONFIDENCE INDEX</div>
+            <div class="metric-value">9000<span class="unit">+</span></div>
+            <div class="metric-pill success">🔥 “it’s over nine thousand”</div>
+          </div>
+        </div>
+
+        <div class="report-text">
+          <p>
+            <strong>Summary:</strong> Global markets experienced extreme volatility, reacting negatively
+            to interest rates, sunlight, shadows, and the concept of “stability” itself.
+            Analysts remain confused, but continue to appear on television.
+          </p>
+          <br>
+          <p>
+            In contrast, the <strong>animated glitch-rap sequence</strong> you were watching displayed
+            remarkable structural integrity, emotional continuity, and better long-term planning
+            skills than most central banks. Its core thesis—“turn confetti into code, break the door
+            if it won’t open”—was deemed more actionable than the last twelve pages of any official
+            economic outlook.
+          </p>
+          <br>
+          <p>
+            Our models suggest that listening to Welfare Junkie bars may provide a more accurate
+            understanding of late-stage capitalism than monitoring intraday candlestick patterns.
+          </p>
+        </div>
+      </section>
+
+      <!-- Panel 4: Forecast Monologue -->
+      <section class="tab-panel" id="panel-forecast">
+        <h2 class="section-title">“IN WELFARE WE TRUST” – MARKET FORECAST</h2>
+        <p class="section-tagline">Spoken by the Welfare Junkie, prophet of confetti &amp; code.</p>
+
+        <div class="quote">
+          Yooo… listen up, you stock-market soldiers.
+          You staring at red-and-green candles like they sacred runes,
+          trying to summon “financial freedom” out of pure anxiety.
+
+          Tomorrow?
+          Markets gonna wiggle like a worm on energy drinks.
+          Crypto up, crypto down, crypto sideways,
+          doing everything except staying still.
+
+          Newsfeeds gonna scream:
+          “BREAKING! SOMETHING HAPPENED SOMEWHERE!”
+          Experts will say: “We expected this,”
+          even though they absolutely did not.
+
+          Me?
+          I’m chillin’.
+
+          State pays the rent, I pay my dues.
+          I turn confetti into code,
+          coupons into futures,
+          dust into little digital universes that actually belong to me.
+
+          Forecast says:
+          80% chance of volatility.
+          100% chance of nonsense.
+          200% chance I stay wild and funky.
+
+          In welfare we trust.
+          In vibes we invest.
+          And if the door won’t open?
+
+          We don’t knock.
+
+          We break the door.
+
+          <div class="quote-speaker">
+            — Welfare Junkie, On-Chain Wizard • Official Market Shaman
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const buttons = document.querySelectorAll('.tab-btn');
+    const panels = {
+      poster: document.getElementById('panel-poster'),
+      rap: document.getElementById('panel-rap'),
+      report: document.getElementById('panel-report'),
+      forecast: document.getElementById('panel-forecast'),
+    };
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const tab = btn.dataset.tab;
+        Object.keys(panels).forEach(key => {
+          panels[key].classList.toggle('active', key === tab);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
